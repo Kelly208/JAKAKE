@@ -8,4 +8,4 @@ class DashboardController
         echo "?Dashboard funcionando! <br><a href='/login'>Ir a Login</a>";
     }
 }
-// estoy mamadaaaS
+
