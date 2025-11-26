@@ -11,4 +11,4 @@ class AuthController
         echo "Login funciona";
     }
 }
-// prueba 2
+// prueba 2.2
