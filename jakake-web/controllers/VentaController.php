@@ -1,9 +1,6 @@
 <?php
 namespace App\Controllers;
 
-use App\Models\VentaModel;
-use App\Utils\Security;
-
 class VentaController {
     public function registrar() {
         $title = 'Registrar Venta';
@@ -11,21 +8,16 @@ class VentaController {
     }
 
     public function procesar() {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') die('Método inválido');
-        if (!Security::validateToken($_POST['csrf_token'] ?? '')) die('Token inválido');
-        $data = Security::sanitize($_POST);
-        $model = new VentaModel();
-        $model->registrarVenta($data);
-        header('Location: /ventas/registrar'); exit;
+        // Simulación de registro exitoso
+        echo "Venta registrada (simulada).";
     }
 
     public function periodo() {
+        $ventas = [
+            ['id' => 1, 'cliente' => 'Juan', 'producto' => 'Cuaderno', 'cantidad' => 2, 'total' => 7000],
+            ['id' => 2, 'cliente' => 'Ana', 'producto' => 'Lapicero', 'cantidad' => 5, 'total' => 6000],
+        ];
         $title = 'Ventas por Período';
-        $ventas = [];
-        if (isset($_GET['desde'], $_GET['hasta'])) {
-            $model = new VentaModel();
-            $ventas = $model->ventasPorPeriodo($_GET['desde'], $_GET['hasta']);
-        }
         require __DIR__ . '/../views/auth/ventas_periodo.php';
     }
 }
