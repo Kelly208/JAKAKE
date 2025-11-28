@@ -1,5 +1,8 @@
-<?php require_once __DIR__ . '/../layouts/header.php'; ?>
-<?php require_once __DIR__ . '/../layouts/sidebar.php'; ?>
+<?php
+use App\Utils\Session;
+require_once __DIR__ . '/../layouts/header.php';
+require_once __DIR__ . '/../layouts/sidebar.php';
+?>
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
