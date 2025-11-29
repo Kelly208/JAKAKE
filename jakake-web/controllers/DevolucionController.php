@@ -25,21 +25,28 @@ class DevolucionController
 
         $title = 'Devoluciones - Papelería JAKAKE';
         
-        // Obtener todas las devoluciones
+        // Obtener todas las devoluciones (agrupadas por id para evitar duplicados)
         try {
             $stmt = $this->db->query("
                 SELECT 
-                    d.*,
+                    d.id,
+                    d.venta_id,
+                    d.motivo,
+                    d.usuario_id,
+                    d.fecha_devolucion,
+                    d.fecha_registro,
                     v.fecha as fecha_venta,
                     c.nombre as cliente_nombre,
-                    c.apellido as cliente_apellido,
                     u.nombre as usuario_nombre,
-                    (SELECT COUNT(*) FROM detalle_devoluciones WHERE devolucion_id = d.id) as total_productos
+                    COUNT(d.producto_id) as total_productos,
+                    SUM(d.valor_devolucion) as valor_total
                 FROM devoluciones d
                 JOIN ventas v ON d.venta_id = v.id
                 LEFT JOIN clientes c ON v.cliente_id = c.id
                 JOIN usuarios u ON d.usuario_id = u.id
-                ORDER BY d.fecha DESC
+                GROUP BY d.id, d.venta_id, d.motivo, d.usuario_id, d.fecha_devolucion, 
+                         d.fecha_registro, v.fecha, c.nombre, u.nombre
+                ORDER BY d.fecha_devolucion DESC
                 LIMIT 100
             ");
             $devoluciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -148,22 +155,28 @@ class DevolucionController
         $title = 'Detalle de Devolución - Papelería JAKAKE';
 
         try {
-            // Obtener información de la devolución
+            // Obtener información de la primera devolución (para datos generales)
             $stmt = $this->db->prepare("
                 SELECT 
-                    d.*,
+                    d.id,
+                    d.venta_id,
+                    d.motivo,
+                    d.fecha_devolucion,
+                    d.fecha_registro,
                     v.fecha as fecha_venta,
                     v.total as total_venta,
                     c.cedula as cliente_cedula,
                     c.nombre as cliente_nombre,
-                    c.apellido as cliente_apellido,
                     c.telefono as cliente_telefono,
-                    u.nombre as usuario_nombre
+                    u.nombre as usuario_nombre,
+                    SUM(d.valor_devolucion) as monto_total
                 FROM devoluciones d
                 JOIN ventas v ON d.venta_id = v.id
                 LEFT JOIN clientes c ON v.cliente_id = c.id
                 JOIN usuarios u ON d.usuario_id = u.id
                 WHERE d.id = ?
+                GROUP BY d.id, d.venta_id, d.motivo, d.fecha_devolucion, d.fecha_registro,
+                         v.fecha, v.total, c.cedula, c.nombre, c.telefono, u.nombre
             ");
             $stmt->execute([$id]);
             $devolucion = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -174,17 +187,22 @@ class DevolucionController
                 exit;
             }
 
-            // Obtener detalle de productos devueltos
+            // Obtener todos los productos de esta devolución
             $stmt = $this->db->prepare("
                 SELECT 
-                    dd.*,
+                    d.producto_id,
+                    d.cantidad,
+                    d.valor_devolucion,
                     p.nombre as producto_nombre,
-                    p.codigo as producto_codigo
-                FROM detalle_devoluciones dd
-                JOIN productos p ON dd.producto_id = p.id
-                WHERE dd.devolucion_id = ?
+                    p.codigo as producto_codigo,
+                    p.precio as precio_unitario
+                FROM devoluciones d
+                JOIN productos p ON d.producto_id = p.id
+                WHERE d.id >= ? AND d.motivo = (SELECT motivo FROM devoluciones WHERE id = ?)
+                  AND d.venta_id = (SELECT venta_id FROM devoluciones WHERE id = ?)
+                  AND d.fecha_devolucion = (SELECT fecha_devolucion FROM devoluciones WHERE id = ?)
             ");
-            $stmt->execute([$id]);
+            $stmt->execute([$id, $id, $id, $id]);
             $detalles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             // Obtener bono regalo asociado (si existe)
@@ -262,7 +280,6 @@ class DevolucionController
                 v.*,
                 c.cedula as cliente_cedula,
                 c.nombre as cliente_nombre,
-                c.apellido as cliente_apellido,
                 u.nombre as usuario_nombre
             FROM ventas v
             LEFT JOIN clientes c ON v.cliente_id = c.id
@@ -280,7 +297,7 @@ class DevolucionController
                 dv.*,
                 p.nombre as producto_nombre,
                 p.codigo as producto_codigo
-            FROM detalle_ventas dv
+            FROM detalle_venta dv
             JOIN productos p ON dv.producto_id = p.id
             WHERE dv.venta_id = ?
         ");

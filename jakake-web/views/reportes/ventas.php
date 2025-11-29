@@ -1,3 +1,9 @@
+<?php 
+// Debug temporal
+if (empty($resumen['total_ventas'])) {
+    echo "<!-- DEBUG: resumen vacío - total_ventas=" . ($resumen['total_ventas'] ?? 'undefined') . " -->";
+}
+?>
 <?php require_once __DIR__ . '/../layouts/header.php'; ?>
 <?php require_once __DIR__ . '/../layouts/sidebar.php'; ?>
 
@@ -184,7 +190,7 @@
                                         <?= $index + 1 ?>
                                     <?php endif; ?>
                                 </td>
-                                <td><?= htmlspecialchars($cliente['nombre'] . ' ' . $cliente['apellido']) ?></td>
+                                <td><?= htmlspecialchars($cliente['nombre']) ?></td>
                                 <td><code><?= htmlspecialchars($cliente['cedula']) ?></code></td>
                                 <td><?= $cliente['total_compras'] ?></td>
                                 <td class="currency">$<?= number_format($cliente['monto_total'], 0, ',', '.') ?></td>

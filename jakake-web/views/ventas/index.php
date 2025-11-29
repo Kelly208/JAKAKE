@@ -76,10 +76,10 @@ require_once __DIR__ . '/../layouts/sidebar.php';
                         <?php foreach ($ventas as $venta): ?>
                         <tr>
                             <td><code>#<?= $venta['id'] ?></code></td>
-                            <td><?= date('d/m/Y H:i', strtotime($venta['fecha'])) ?></td>
+                            <td><?= date('d/m/Y H:i', strtotime($venta['fecha_registro'])) ?></td>
                             <td>
                                 <?php if ($venta['cliente_id']): ?>
-                                    <strong><?= htmlspecialchars($venta['cliente_nombre'] . ' ' . $venta['cliente_apellido']) ?></strong>
+                                    <strong><?= htmlspecialchars($venta['cliente_nombre']) ?></strong>
                                 <?php else: ?>
                                     <span class="text-muted">Cliente general</span>
                                 <?php endif; ?>
@@ -100,7 +100,7 @@ require_once __DIR__ . '/../layouts/sidebar.php';
                                     'tarjeta' => 'credit-card',
                                     'transferencia' => 'bank'
                                 ];
-                                $medio = $venta['medio_pago'];
+                                $medio = $venta['medio_pago'] ?? 'efectivo';
                                 ?>
                                 <i class="bi bi-<?= $icono_pago[$medio] ?? 'cash' ?>"></i>
                                 <?= ucfirst($medio) ?>

@@ -51,7 +51,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <p class="mb-1"><strong>Cliente:</strong> 
-                                    <?= htmlspecialchars(($venta['cliente_nombre'] ?? 'Cliente general') . ' ' . ($venta['cliente_apellido'] ?? '')) ?>
+                                    <?= htmlspecialchars($venta['cliente_nombre'] ?? 'Cliente general') ?>
                                 </p>
                                 <p class="mb-0"><strong>Fecha:</strong> <?= date('d/m/Y H:i', strtotime($venta['fecha'])) ?></p>
                             </div>
@@ -212,7 +212,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <p class="mb-1"><strong>Cliente:</strong> ${data.venta.cliente_nombre || 'Cliente general'} ${data.venta.cliente_apellido || ''}</p>
+                            <p class="mb-1"><strong>Cliente:</strong> ${data.venta.cliente_nombre || 'Cliente general'}</p>
                             <p class="mb-0"><strong>Fecha:</strong> ${new Date(data.venta.fecha).toLocaleString('es-CO')}</p>
                         </div>
                         <div class="col-md-6">

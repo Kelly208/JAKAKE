@@ -16,7 +16,7 @@
             <span class="text-muted">#<?= $venta['id'] ?></span>
         </h1>
         <p class="text-muted mb-0">
-            Fecha: <?= date('d/m/Y H:i', strtotime($venta['fecha'])) ?>
+            Fecha: <?= date('d/m/Y H:i', strtotime($venta['fecha_registro'])) ?>
         </p>
     </div>
     <div>
@@ -44,7 +44,7 @@
                         <h6 class="text-muted mb-2">Cliente</h6>
                         <?php if ($venta['cliente_id']): ?>
                             <p class="mb-1">
-                                <strong><?= htmlspecialchars($venta['cliente_nombre'] . ' ' . $venta['cliente_apellido']) ?></strong>
+                                <strong><?= htmlspecialchars($venta['cliente_nombre']) ?></strong>
                             </p>
                             <p class="mb-1 text-muted small">
                                 <i class="bi bi-card-text"></i> <?= htmlspecialchars($venta['cliente_cedula']) ?>

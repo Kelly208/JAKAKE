@@ -23,76 +23,20 @@ $isAdmin = $userRol === 'administrador';
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <!-- Barra superior simplificada -->
+    <nav class="navbar navbar-dark bg-primary py-2">
         <div class="container-fluid">
             <a class="navbar-brand fw-bold" href="/dashboard">
                 <i class="bi bi-shop"></i> Papelería JAKAKE
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/dashboard">
-                            <i class="bi bi-house-door"></i> Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/ventas">
-                            <i class="bi bi-cart-plus"></i> Nueva Venta
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/productos">
-                            <i class="bi bi-box-seam"></i> Productos
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/clientes">
-                            <i class="bi bi-people"></i> Clientes
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/devoluciones">
-                            <i class="bi bi-arrow-return-left"></i> Devoluciones
-                        </a>
-                    </li>
-                    <?php if ($isAdmin): ?>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="bi bi-gear"></i> Administración
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/usuarios"><i class="bi bi-person-badge"></i> Usuarios</a></li>
-                            <li><a class="dropdown-item" href="/proveedores"><i class="bi bi-truck"></i> Proveedores</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="/reportes"><i class="bi bi-graph-up"></i> Reportes</a></li>
-                            <li><a class="dropdown-item" href="/auditoria"><i class="bi bi-clipboard-data"></i> Auditoría</a></li>
-                        </ul>
-                    </li>
-                    <?php else: ?>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/reportes">
-                            <i class="bi bi-graph-up"></i> Reportes
-                        </a>
-                    </li>
-                    <?php endif; ?>
-                </ul>
-                <ul class="navbar-nav">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="bi bi-person-circle"></i> <?= htmlspecialchars($userName) ?>
-                            <span class="badge bg-light text-primary ms-1"><?= $isAdmin ? 'Admin' : 'Cajero' ?></span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="/perfil"><i class="bi bi-person"></i> Mi Perfil</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-danger" href="/logout"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</a></li>
-                        </ul>
-                    </li>
-                </ul>
+            <div class="d-flex align-items-center">
+                <span class="text-white me-3">
+                    <i class="bi bi-person-circle"></i> <?= htmlspecialchars($userName) ?>
+                    <span class="badge bg-light text-primary ms-1"><?= $isAdmin ? 'Admin' : 'Cajero' ?></span>
+                </span>
+                <a href="/logout" class="btn btn-sm btn-outline-light" title="Cerrar Sesión">
+                    <i class="bi bi-box-arrow-right"></i>
+                </a>
             </div>
         </div>
     </nav>

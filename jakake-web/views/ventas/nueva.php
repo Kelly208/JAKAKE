@@ -34,7 +34,7 @@
                                 <option value="">Seleccione un cliente...</option>
                                 <?php foreach ($clientes as $cliente): ?>
                                 <option value="<?= $cliente['id'] ?>">
-                                    <?= htmlspecialchars($cliente['nombre'] . ' ' . $cliente['apellido']) ?> 
+                                    <?= htmlspecialchars($cliente['nombre']) ?> 
                                     - <?= htmlspecialchars($cliente['cedula']) ?>
                                 </option>
                                 <?php endforeach; ?>
@@ -47,6 +47,38 @@
                                 <option value="tarjeta">Tarjeta</option>
                                 <option value="transferencia">Transferencia</option>
                             </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Sección de Bono Regalo -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card bg-light border">
+                                <div class="card-body">
+                                    <h6 class="mb-3"><i class="bi bi-gift"></i> ¿Tiene un bono regalo?</h6>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control" id="codigo_bono" name="codigo_bono" 
+                                                   placeholder="Ingrese el código del bono (ej: BONO-000001)">
+                                            <input type="hidden" id="bono_id" name="bono_id">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <button type="button" class="btn btn-outline-success w-100" id="btnValidarBono">
+                                                <i class="bi bi-check-circle"></i> Validar Bono
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div id="bonoInfo" class="mt-3" style="display: none;">
+                                        <div class="alert alert-success mb-0">
+                                            <strong><i class="bi bi-check-circle-fill"></i> Bono válido</strong><br>
+                                            <span id="bonoDetalle"></span>
+                                            <button type="button" class="btn btn-sm btn-outline-danger float-end" id="btnQuitarBono">
+                                                <i class="bi bi-x"></i> Quitar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -132,6 +164,10 @@
                         <span>IVA (19%):</span>
                         <span id="ivaVenta" class="currency">$0</span>
                     </div>
+                    <div class="d-flex justify-content-between mb-2" id="descuentoBonoRow" style="display: none;">
+                        <span class="text-success"><i class="bi bi-gift"></i> Descuento Bono:</span>
+                        <span id="descuentoBono" class="currency text-success">-$0</span>
+                    </div>
                     <hr>
                     <div class="d-flex justify-content-between mb-3">
                         <strong>Total:</strong>
@@ -160,12 +196,77 @@
 <script>
 // Carrito de compras
 let carrito = [];
+let bonoAplicado = null;
 
 document.addEventListener('DOMContentLoaded', function() {
     const btnAgregar = document.getElementById('btnAgregarProducto');
     const productoSelect = document.getElementById('producto_select');
     const cantidadInput = document.getElementById('cantidad_producto');
     const formVenta = document.getElementById('formVenta');
+    const btnValidarBono = document.getElementById('btnValidarBono');
+    const btnQuitarBono = document.getElementById('btnQuitarBono');
+    const clienteSelect = document.getElementById('cliente_id');
+
+    // Validar bono
+    btnValidarBono.addEventListener('click', async function() {
+        const codigoBono = document.getElementById('codigo_bono').value.trim();
+        const clienteId = clienteSelect.value;
+
+        if (!clienteId) {
+            jakake.showToast('Primero seleccione un cliente', 'warning');
+            return;
+        }
+
+        if (!codigoBono) {
+            jakake.showToast('Ingrese el código del bono', 'warning');
+            return;
+        }
+
+        try {
+            const response = await fetch(`/ventas/validar-bono?codigo=${encodeURIComponent(codigoBono)}&cliente_id=${clienteId}`, {
+                method: 'GET',
+                credentials: 'same-origin',
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+
+            if (data.success) {
+                bonoAplicado = data.bono;
+                document.getElementById('bono_id').value = data.bono.id;
+                document.getElementById('bonoDetalle').textContent = `Valor: $${jakake.formatCurrency(data.bono.valor)} - Válido hasta: ${data.bono.fecha_vencimiento}`;
+                document.getElementById('bonoInfo').style.display = 'block';
+                document.getElementById('codigo_bono').disabled = true;
+                btnValidarBono.disabled = true;
+                actualizarTotales();
+                jakake.showToast('Bono aplicado correctamente', 'success');
+            } else {
+                jakake.showToast(data.error || 'Bono inválido', 'danger');
+            }
+        } catch (error) {
+            console.error('Error al validar bono:', error);
+            jakake.showToast('Error de conexión al validar el bono', 'danger');
+        }
+    });
+
+    // Quitar bono
+    btnQuitarBono.addEventListener('click', function() {
+        bonoAplicado = null;
+        document.getElementById('bono_id').value = '';
+        document.getElementById('codigo_bono').value = '';
+        document.getElementById('codigo_bono').disabled = false;
+        document.getElementById('bonoInfo').style.display = 'none';
+        btnValidarBono.disabled = false;
+        actualizarTotales();
+        jakake.showToast('Bono removido', 'info');
+    });
+
 
     btnAgregar.addEventListener('click', function() {
         const productoId = productoSelect.value;
@@ -304,8 +405,19 @@ function eliminarProducto(index) {
 function actualizarTotales() {
     const subtotal = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
     const iva = subtotal * 0.19;
-    const total = subtotal + iva;
+    let total = subtotal + iva;
     const cantidadTotal = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+
+    // Aplicar descuento del bono
+    let descuentoBono = 0;
+    if (bonoAplicado) {
+        descuentoBono = Math.min(parseFloat(bonoAplicado.valor), total);
+        total -= descuentoBono;
+        document.getElementById('descuentoBonoRow').style.display = 'flex';
+        document.getElementById('descuentoBono').textContent = '-$' + jakake.formatCurrency(descuentoBono);
+    } else {
+        document.getElementById('descuentoBonoRow').style.display = 'none';
+    }
 
     document.getElementById('subtotalVenta').textContent = '$' + jakake.formatCurrency(subtotal);
     document.getElementById('ivaVenta').textContent = '$' + jakake.formatCurrency(iva);

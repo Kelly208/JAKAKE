@@ -35,10 +35,14 @@ class ReporteController
             exit;
         }
 
+        // Headers para evitar caché
+        header('Cache-Control: no-cache, must-revalidate');
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+
         $title = 'Reporte de Ventas - Papelería JAKAKE';
 
-        // Obtener fechas del formulario o usar valores por defecto
-        $fecha_inicio = $_GET['fecha_inicio'] ?? date('Y-m-01'); // Primer día del mes
+        // Obtener fechas del formulario o usar valores por defecto (todo el año)
+        $fecha_inicio = $_GET['fecha_inicio'] ?? date('Y-01-01'); // Primer día del año
         $fecha_fin = $_GET['fecha_fin'] ?? date('Y-m-d'); // Hoy
 
         try {
@@ -91,7 +95,6 @@ class ReporteController
             $stmt = $this->db->prepare("
                 SELECT 
                     c.nombre,
-                    c.apellido,
                     c.cedula,
                     COUNT(v.id) as total_compras,
                     SUM(v.total) as monto_total
@@ -99,7 +102,7 @@ class ReporteController
                 JOIN clientes c ON v.cliente_id = c.id
                 WHERE DATE(v.fecha) BETWEEN ? AND ?
                 AND v.estado = 'completada'
-                GROUP BY v.cliente_id, c.nombre, c.apellido, c.cedula
+                GROUP BY v.cliente_id, c.nombre, c.cedula
                 ORDER BY monto_total DESC
                 LIMIT 10
             ");
@@ -132,14 +135,30 @@ class ReporteController
         $fecha_fin = $_GET['fecha_fin'] ?? date('Y-m-d');
 
         try {
-            // Usar procedimiento almacenado para productos más vendidos
-            $stmt = $this->db->prepare("CALL sp_productos_mas_vendidos(?, ?, 20)");
+            // Productos más vendidos del período (sin procedimiento, query directa con fechas)
+            $stmt = $this->db->prepare("
+                SELECT
+                    p.id,
+                    p.codigo,
+                    p.nombre,
+                    p.tipo,
+                    SUM(dv.cantidad) as total_vendido,
+                    COUNT(DISTINCT dv.venta_id) as num_ventas,
+                    SUM(dv.cantidad * dv.precio_unitario) as ingresos_totales        
+                FROM productos p
+                INNER JOIN detalle_venta dv ON p.id = dv.producto_id
+                INNER JOIN ventas v ON dv.venta_id = v.id
+                WHERE v.estado = 'completada'
+                  AND DATE(v.fecha) BETWEEN ? AND ?
+                GROUP BY p.id, p.codigo, p.nombre, p.tipo
+                ORDER BY total_vendido DESC
+                LIMIT 20
+            ");
             $stmt->execute([$fecha_inicio, $fecha_fin]);
             $productos_mas_vendidos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $stmt->closeCursor();
 
-            // Productos con bajo stock
-            $stmt = $this->db->prepare("CALL sp_productos_bajo_stock(20)");
+            // Productos con bajo stock (sin parámetros)
+            $stmt = $this->db->prepare("CALL sp_productos_bajo_stock()");
             $stmt->execute();
             $productos_bajo_stock = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $stmt->closeCursor();

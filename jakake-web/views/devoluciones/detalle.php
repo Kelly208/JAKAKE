@@ -19,7 +19,7 @@ require_once __DIR__ . '/../layouts/sidebar.php';
             <span class="text-muted">#<?= $devolucion['id'] ?></span>
         </h1>
         <p class="text-muted mb-0">
-            Fecha: <?= date('d/m/Y H:i', strtotime($devolucion['fecha'])) ?>
+            Fecha: <?= date('d/m/Y H:i', strtotime($devolucion['fecha_devolucion'])) ?>
         </p>
     </div>
     <div>
@@ -62,7 +62,7 @@ require_once __DIR__ . '/../layouts/sidebar.php';
                         <h6 class="text-muted mb-2">Cliente</h6>
                         <?php if ($devolucion['cliente_nombre']): ?>
                             <p class="mb-1">
-                                <strong><?= htmlspecialchars($devolucion['cliente_nombre'] . ' ' . $devolucion['cliente_apellido']) ?></strong>
+                                <strong><?= htmlspecialchars($devolucion['cliente_nombre']) ?></strong>
                             </p>
                             <p class="mb-1 text-muted small">
                                 <i class="bi bi-card-text"></i> <?= htmlspecialchars($devolucion['cliente_cedula']) ?>
@@ -125,7 +125,7 @@ require_once __DIR__ . '/../layouts/sidebar.php';
                             <?php 
                             $total_devuelto = 0;
                             foreach ($detalles as $detalle): 
-                                $subtotal_item = $detalle['precio_unitario'] * $detalle['cantidad'];
+                                $subtotal_item = $detalle['valor_devolucion'];
                                 $total_devuelto += $subtotal_item;
                             ?>
                             <tr>
@@ -159,7 +159,7 @@ require_once __DIR__ . '/../layouts/sidebar.php';
                 <hr>
                 <div class="d-flex justify-content-between mb-3">
                     <strong>Monto devuelto:</strong>
-                    <strong class="h4 text-warning currency">$<?= number_format($devolucion['monto'], 0, ',', '.') ?></strong>
+                    <strong class="h4 text-warning currency">$<?= number_format($devolucion['monto_total'], 0, ',', '.') ?></strong>
                 </div>
             </div>
         </div>
@@ -180,7 +180,7 @@ require_once __DIR__ . '/../layouts/sidebar.php';
                     <code class="bg-light p-2 rounded"><?= htmlspecialchars($bono['codigo']) ?></code>
                 </h3>
                 <p class="text-muted mb-2">
-                    <strong>Valor:</strong> $<?= number_format($bono['monto'], 0, ',', '.') ?>
+                    <strong>Valor:</strong> $<?= number_format($bono['valor'], 0, ',', '.') ?>
                 </p>
                 <p class="text-muted small mb-2">
                     <strong>Estado:</strong> 
@@ -210,7 +210,7 @@ require_once __DIR__ . '/../layouts/sidebar.php';
             <div class="card-body">
                 <p class="text-muted small mb-2">
                     <strong>Fecha de devolución:</strong><br>
-                    <?= date('d/m/Y H:i:s', strtotime($devolucion['fecha'])) ?>
+                    <?= date('d/m/Y H:i:s', strtotime($devolucion['fecha_devolucion'])) ?>
                 </p>
                 <p class="text-muted small mb-0">
                     <strong>ID de devolución:</strong> #<?= $devolucion['id'] ?>

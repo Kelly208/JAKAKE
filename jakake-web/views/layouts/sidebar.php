@@ -50,11 +50,6 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <?= strpos($_SERVER['REQUEST_URI'], '/usuarios') === 0 ? 'active' : '' ?>" href="/usuarios">
-                                <i class="bi bi-people-fill"></i> Usuarios
-                            </a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link <?= strpos($_SERVER['REQUEST_URI'], '/auditoria') === 0 ? 'active' : '' ?>" href="/auditoria">
                                 <i class="bi bi-clipboard-data"></i> Auditoría
                             </a>

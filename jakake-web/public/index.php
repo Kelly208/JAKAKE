@@ -12,6 +12,16 @@ Session::start();
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $method = $_SERVER['REQUEST_METHOD'];
 
+// Redirigir raíz a dashboard si está autenticado, si no a login
+if ($uri === '/') {
+    if (Session::get('user_id')) {
+        header('Location: /dashboard');
+    } else {
+        header('Location: /login');
+    }
+    exit;
+}
+
 // Definir rutas protegidas que requieren autenticación
 $publicRoutes = ['/login'];
 
@@ -48,8 +58,11 @@ $routes = [
         '/productos/crear' => 'ProductoController@crear',
         '/clientes' => 'ClienteController@index',
         '/clientes/crear' => 'ClienteController@crear',
+        '/proveedores' => 'ProveedorController@index',
+        '/proveedores/crear' => 'ProveedorController@crear',
         '/ventas' => 'VentaController@index',
         '/ventas/nueva' => 'VentaController@nueva',
+        '/ventas/validar-bono' => 'VentaController@validarBono',
         '/devoluciones' => 'DevolucionController@index',
         '/devoluciones/nueva' => 'DevolucionController@nueva',
         '/devoluciones/buscar-venta' => 'DevolucionController@buscarVenta',
@@ -57,6 +70,7 @@ $routes = [
         '/reportes/ventas' => 'ReporteController@ventas',
         '/reportes/productos' => 'ReporteController@productos',
         '/reportes/clientes' => 'ReporteController@clientes',
+        '/auditoria' => 'AuditoriaController@index',
         
         // Usuarios (Admin)
         '/usuarios' => 'UsuarioController@index',
@@ -66,6 +80,7 @@ $routes = [
         '/login' => 'AuthController@login',
         '/productos/crear' => 'ProductoController@crear',
         '/clientes/crear' => 'ClienteController@crear',
+        '/proveedores/crear' => 'ProveedorController@crear',
         '/ventas/nueva' => 'VentaController@nueva',
         '/devoluciones/nueva' => 'DevolucionController@nueva',
         '/usuarios/crear' => 'UsuarioController@crear',
@@ -115,6 +130,22 @@ if (preg_match('#^/devoluciones/detalle/(\d+)$#', $uri, $matches)) {
     $id = $matches[1];
     $controller = new App\Controllers\DevolucionController();
     $controller->detalle($id);
+    exit;
+}
+
+// Manejar rutas con parámetros (editar proveedor)
+if (preg_match('#^/proveedores/editar/(\d+)$#', $uri, $matches)) {
+    $id = $matches[1];
+    $controller = new App\Controllers\ProveedorController();
+    $controller->editar($id);
+    exit;
+}
+
+// Manejar rutas con parámetros (eliminar proveedor)
+if (preg_match('#^/proveedores/eliminar/(\d+)$#', $uri, $matches)) {
+    $id = $matches[1];
+    $controller = new App\Controllers\ProveedorController();
+    $controller->eliminar($id);
     exit;
 }
 

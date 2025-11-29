@@ -39,14 +39,10 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="nombre" class="form-label">Nombre <span class="text-danger">*</span></label>
+                        <div class="col-md-12 mb-3">
+                            <label for="nombre" class="form-label">Nombre Completo <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="nombre" name="nombre" required>
-                        </div>
-
-                        <div class="col-md-6 mb-3">
-                            <label for="apellido" class="form-label">Apellido <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="apellido" name="apellido" required>
+                            <small class="text-muted">Ingrese el nombre completo del cliente</small>
                         </div>
                     </div>
 

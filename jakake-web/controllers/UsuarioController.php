@@ -26,7 +26,7 @@ class UsuarioController
                     u.*,
                     (SELECT COUNT(*) FROM ventas WHERE usuario_id = u.id) as total_ventas
                 FROM usuarios u
-                ORDER BY u.fecha_creacion DESC
+                ORDER BY u.fecha_registro DESC
             ");
             $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (\PDOException $e) {
@@ -75,7 +75,7 @@ class UsuarioController
 
             // Insertar usuario
             $stmt = $this->db->prepare("
-                INSERT INTO usuarios (nombre, email, password, rol, estado)
+                INSERT INTO usuarios (nombre, email, password_hash, rol, estado)
                 VALUES (?, ?, ?, ?, 'activo')
             ");
             

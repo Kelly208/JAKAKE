@@ -149,7 +149,7 @@ require_once __DIR__ . '/../layouts/sidebar.php';
                             <td>
                                 <span class="badge bg-primary"><?= $usuario['total_ventas'] ?></span>
                             </td>
-                            <td><?= date('d/m/Y', strtotime($usuario['fecha_creacion'])) ?></td>
+                            <td><?= date('d/m/Y', strtotime($usuario['fecha_registro'])) ?></td>
                             <td>
                                 <a href="/usuarios/editar/<?= $usuario['id'] ?>" class="btn btn-sm btn-primary" title="Editar">
                                     <i class="bi bi-pencil"></i>

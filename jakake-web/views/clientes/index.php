@@ -75,7 +75,7 @@ require_once __DIR__ . '/../layouts/sidebar.php';
                         <tr>
                             <td><code><?= htmlspecialchars($cliente['cedula']) ?></code></td>
                             <td>
-                                <strong><?= htmlspecialchars($cliente['nombre'] . ' ' . $cliente['apellido']) ?></strong>
+                                <strong><?= htmlspecialchars($cliente['nombre']) ?></strong>
                                 <?php if ($cliente['direccion']): ?>
                                 <br><small class="text-muted"><i class="bi bi-geo-alt"></i> <?= htmlspecialchars($cliente['direccion']) ?></small>
                                 <?php endif; ?>
@@ -105,8 +105,8 @@ require_once __DIR__ . '/../layouts/sidebar.php';
                                 <?php endif; ?>
                             </td>
                             <td>
-                                <span class="badge bg-<?= $cliente['estado'] === 'activo' ? 'success' : 'secondary' ?>">
-                                    <?= ucfirst($cliente['estado']) ?>
+                                <span class="badge bg-<?= $cliente['acepto_politicas'] ? 'success' : 'secondary' ?>">
+                                    <?= $cliente['acepto_politicas'] ? 'Activo' : 'Inactivo' ?>
                                 </span>
                             </td>
                             <td>

@@ -41,16 +41,11 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="nombre" class="form-label">Nombre <span class="text-danger">*</span></label>
+                        <div class="col-md-12 mb-3">
+                            <label for="nombre" class="form-label">Nombre Completo <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="nombre" name="nombre" 
                                    value="<?= htmlspecialchars($cliente['nombre']) ?>" required>
-                        </div>
-
-                        <div class="col-md-6 mb-3">
-                            <label for="apellido" class="form-label">Apellido <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="apellido" name="apellido" 
-                                   value="<?= htmlspecialchars($cliente['apellido']) ?>" required>
+                            <small class="text-muted">Ingrese el nombre completo del cliente</small>
                         </div>
                     </div>
 
@@ -66,15 +61,6 @@
                             <input type="text" class="form-control" id="direccion" name="direccion" 
                                    value="<?= htmlspecialchars($cliente['direccion'] ?? '') ?>">
                         </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="estado" class="form-label">Estado <span class="text-danger">*</span></label>
-                        <select class="form-select" id="estado" name="estado" required>
-                            <option value="activo" <?= $cliente['estado'] === 'activo' ? 'selected' : '' ?>>Activo</option>
-                            <option value="inactivo" <?= $cliente['estado'] === 'inactivo' ? 'selected' : '' ?>>Inactivo</option>
-                        </select>
-                        <small class="text-muted">Los clientes inactivos no podrán realizar compras</small>
                     </div>
 
                     <hr>

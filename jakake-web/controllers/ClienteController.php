@@ -31,7 +31,6 @@ class ClienteController
                 SELECT 
                     c.*,
                     ap.fecha_aceptacion,
-                    ap.version_politica,
                     (SELECT COUNT(*) FROM ventas WHERE cliente_id = c.id) as total_compras
                 FROM clientes c
                 LEFT JOIN aceptacion_politicas ap ON c.id = ap.cliente_id
@@ -71,7 +70,6 @@ class ClienteController
 
             $cedula = Security::sanitize($_POST['cedula']);
             $nombre = Security::sanitize($_POST['nombre']);
-            $apellido = Security::sanitize($_POST['apellido']);
             $direccion = Security::sanitize($_POST['direccion'] ?? '');
             $telefono = Security::sanitize($_POST['telefono'] ?? '');
             $email = Security::sanitize($_POST['email']);
@@ -87,12 +85,12 @@ class ClienteController
             // Insertar cliente
             $stmt = $this->db->prepare("
                 INSERT INTO clientes 
-                (cedula, nombre, apellido, direccion, telefono, email, estado)
-                VALUES (?, ?, ?, ?, ?, ?, 'activo')
+                (cedula, nombre, direccion, telefono, email, acepto_politicas)
+                VALUES (?, ?, ?, ?, ?, ?)
             ");
             
             $stmt->execute([
-                $cedula, $nombre, $apellido, $direccion, $telefono, $email
+                $cedula, $nombre, $direccion, $telefono, $email, $acepta_politicas
             ]);
 
             $cliente_id = $this->db->lastInsertId();
@@ -101,8 +99,8 @@ class ClienteController
             if ($acepta_politicas) {
                 $stmt = $this->db->prepare("
                     INSERT INTO aceptacion_politicas 
-                    (cliente_id, version_politica, ip_aceptacion)
-                    VALUES (?, 'v1.0', ?)
+                    (tipo_usuario, cliente_id, politica_id, ip_aceptacion)
+                    VALUES ('cliente', ?, 1, ?)
                 ");
                 $stmt->execute([$cliente_id, $_SERVER['REMOTE_ADDR']]);
             }
@@ -176,21 +174,18 @@ class ClienteController
     {
         try {
             $nombre = Security::sanitize($_POST['nombre']);
-            $apellido = Security::sanitize($_POST['apellido']);
             $direccion = Security::sanitize($_POST['direccion'] ?? '');
             $telefono = Security::sanitize($_POST['telefono'] ?? '');
             $email = Security::sanitize($_POST['email']);
-            $estado = Security::sanitize($_POST['estado']);
 
             $stmt = $this->db->prepare("
                 UPDATE clientes 
-                SET nombre = ?, apellido = ?, direccion = ?, telefono = ?,
-                    email = ?, estado = ?
+                SET nombre = ?, direccion = ?, telefono = ?, email = ?
                 WHERE id = ?
             ");
             
             $stmt->execute([
-                $nombre, $apellido, $direccion, $telefono, $email, $estado, $id
+                $nombre, $direccion, $telefono, $email, $id
             ]);
 
             Session::set('success', 'Cliente actualizado exitosamente');
@@ -230,7 +225,7 @@ class ClienteController
             $stmt->execute([$id]);
             $historial = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            $title = 'Historial de Compras - ' . $cliente['nombre'] . ' ' . $cliente['apellido'];
+            $title = 'Historial de Compras - ' . $cliente['nombre'];
 
             require_once __DIR__ . '/../views/clientes/historial.php';
 

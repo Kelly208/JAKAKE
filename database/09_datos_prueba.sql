@@ -25,26 +25,26 @@ INSERT INTO politicas_datos (version, titulo, contenido, fecha_vigencia, activa)
 
 -- Administradores
 INSERT INTO usuarios (nombre, email, password_hash, rol, telefono, direccion, estado, acepto_politicas, politica_id) VALUES
-('María González', 'maria.gonzalez@jakake.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'administrador', '3101234567', 'Calle 15 #10-25', 'activo', TRUE, 1),
-('Carlos Ramírez', 'carlos.ramirez@jakake.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'administrador', '3109876543', 'Carrera 8 #20-30', 'activo', TRUE, 1);
+('Maria Gonzalez', 'maria.gonzalez@jakake.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'administrador', '3101234567', 'Calle 15 #10-25', 'activo', TRUE, 1),
+('Carlos Ramirez', 'carlos.ramirez@jakake.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'administrador', '3109876543', 'Carrera 8 #20-30', 'activo', TRUE, 1);
 
 -- Cajeros
 INSERT INTO usuarios (nombre, email, password_hash, rol, telefono, direccion, estado, acepto_politicas, politica_id) VALUES
-('Laura Martínez', 'laura.martinez@jakake.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cajero', '3201234567', 'Avenida 30 #15-40', 'activo', TRUE, 1),
-('Pedro Sánchez', 'pedro.sanchez@jakake.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cajero', '3159876543', 'Calle 25 #12-18', 'activo', TRUE, 1);
+('Laura Martinez', 'laura.martinez@jakake.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cajero', '3201234567', 'Avenida 30 #15-40', 'activo', TRUE, 1),
+('Pedro Sanchez', 'pedro.sanchez@jakake.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cajero', '3159876543', 'Calle 25 #12-18', 'activo', TRUE, 1);
 
 -- =====================================================
 -- 3. CLIENTES
 -- =====================================================
 
 INSERT INTO clientes (nombre, cedula, telefono, direccion, email, fecha_nacimiento, acepto_politicas, politica_id) VALUES
-('Juan Pérez García', '1088123456', '3151234567', 'Calle 10 #5-20, Pereira', 'juan.perez@email.com', '1990-05-15', TRUE, 1),
-('Ana María López', '1004567890', '3209876543', 'Carrera 7 #18-45, Pereira', 'ana.lopez@email.com', '1985-08-22', TRUE, 1),
+('Juan Perez Garcia', '1088123456', '3151234567', 'Calle 10 #5-20, Pereira', 'juan.perez@email.com', '1990-05-15', TRUE, 1),
+('Ana Maria Lopez', '1004567890', '3209876543', 'Carrera 7 #18-45, Pereira', 'ana.lopez@email.com', '1985-08-22', TRUE, 1),
 ('Roberto Castro', '1088234567', '3101112233', 'Avenida 30 #12-30, Pereira', 'roberto.castro@email.com', '1992-11-10', TRUE, 1),
-('Sofia Hernández', '1004678901', '3156667788', 'Calle 25 #8-15, Pereira', 'sofia.hernandez@email.com', '1988-03-05', TRUE, 1),
+('Sofia Hernandez', '1004678901', '3156667788', 'Calle 25 #8-15, Pereira', 'sofia.hernandez@email.com', '1988-03-05', TRUE, 1),
 ('Diego Morales', '1088345678', '3202223344', 'Carrera 15 #20-10, Pereira', 'diego.morales@email.com', '1995-07-18', TRUE, 1),
 ('Valentina Ruiz', '1004789012', '3158889999', 'Calle 40 #25-35, Pereira', 'valentina.ruiz@email.com', '2000-12-30', TRUE, 1),
-('Andrés Gómez', '1088456789', '3103334455', 'Avenida 4 #10-20, Pereira', 'andres.gomez@email.com', '1993-09-12', TRUE, 1),
+('Andres Gomez', '1088456789', '3103334455', 'Avenida 4 #10-20, Pereira', 'andres.gomez@email.com', '1993-09-12', TRUE, 1),
 ('Carolina Silva', '1004890123', '3159990000', 'Carrera 12 #15-25, Pereira', 'carolina.silva@email.com', '1987-06-25', TRUE, 1),
 ('Miguel Torres', '1088567890', '3204445566', 'Calle 35 #18-40, Pereira', 'miguel.torres@email.com', '1991-04-08', TRUE, 1),
 ('Isabella Vargas', '1004901234', '3150001111', 'Avenida 20 #22-30, Pereira', 'isabella.vargas@email.com', '1998-10-15', TRUE, 1);
@@ -54,11 +54,11 @@ INSERT INTO clientes (nombre, cedula, telefono, direccion, email, fecha_nacimien
 -- =====================================================
 
 INSERT INTO proveedores (nombre, nit, direccion, telefono, contacto, ciudad, email, estado) VALUES
-('Distribuidora Nacional S.A.', '900123456-1', 'Zona Industrial Calle 50 #30-10', '6013456789', 'Luis Fernández', 'Bogotá', 'ventas@disnacional.com', 'activo'),
-('Papeles y Suministros Ltda.', '800234567-2', 'Carrera 100 #15-20', '6047890123', 'Martha Pérez', 'Medellín', 'contacto@papelesysuminitros.com', 'activo'),
+('Distribuidora Nacional S.A.', '900123456-1', 'Zona Industrial Calle 50 #30-10', '6013456789', 'Luis Fernandez', 'Bogota', 'ventas@disnacional.com', 'activo'),
+('Papeles y Suministros Ltda.', '800234567-2', 'Carrera 100 #15-20', '6047890123', 'Martha Perez', 'Medellin', 'contacto@papelesysuminitros.com', 'activo'),
 ('Arte y Creatividad S.A.S.', '900345678-3', 'Avenida 6 #25-30', '6022345678', 'Carlos Mendoza', 'Cali', 'ventas@arteycreatividad.com', 'activo'),
-('Escolar Total', '800456789-4', 'Calle 80 #40-15', '6013567890', 'Ana García', 'Bogotá', 'pedidos@escolartotal.com', 'activo'),
-('Oficina Moderna', '900567890-5', 'Carrera 50 #20-25', '6044567890', 'Roberto Díaz', 'Medellín', 'info@oficinamoderna.com', 'activo');
+('Escolar Total', '800456789-4', 'Calle 80 #40-15', '6013567890', 'Ana Garcia', 'Bogota', 'pedidos@escolartotal.com', 'activo'),
+('Oficina Moderna', '900567890-5', 'Carrera 50 #20-25', '6044567890', 'Roberto Diaz', 'Medellin', 'info@oficinamoderna.com', 'activo');
 
 -- =====================================================
 -- 5. PRODUCTOS

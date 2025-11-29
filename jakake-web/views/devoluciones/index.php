@@ -76,7 +76,7 @@ require_once __DIR__ . '/../layouts/sidebar.php';
                         <?php foreach ($devoluciones as $devolucion): ?>
                         <tr>
                             <td><code>#<?= $devolucion['id'] ?></code></td>
-                            <td><?= date('d/m/Y H:i', strtotime($devolucion['fecha'])) ?></td>
+                            <td><?= date('d/m/Y H:i', strtotime($devolucion['fecha_devolucion'])) ?></td>
                             <td>
                                 <a href="/ventas/detalle/<?= $devolucion['venta_id'] ?>" class="text-primary">
                                     #<?= $devolucion['venta_id'] ?>
@@ -85,7 +85,7 @@ require_once __DIR__ . '/../layouts/sidebar.php';
                             </td>
                             <td>
                                 <?php if ($devolucion['cliente_nombre']): ?>
-                                    <?= htmlspecialchars($devolucion['cliente_nombre'] . ' ' . $devolucion['cliente_apellido']) ?>
+                                    <?= htmlspecialchars($devolucion['cliente_nombre']) ?>
                                 <?php else: ?>
                                     <span class="text-muted">Cliente general</span>
                                 <?php endif; ?>
@@ -97,7 +97,7 @@ require_once __DIR__ . '/../layouts/sidebar.php';
                                 </span>
                             </td>
                             <td class="currency">
-                                <strong>$<?= number_format($devolucion['monto'], 0, ',', '.') ?></strong>
+                                <strong>$<?= number_format($devolucion['valor_total'], 0, ',', '.') ?></strong>
                             </td>
                             <td>
                                 <small><?= htmlspecialchars(substr($devolucion['motivo'], 0, 30)) ?>...</small>

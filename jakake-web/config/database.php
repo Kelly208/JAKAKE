@@ -13,7 +13,7 @@ class Database
             $host = 'localhost';
             $db   = 'papeleria_jakake';
             $user = 'root';
-            $pass = '';
+            $pass = '2409';
 
             $dsn = "mysql:host=$host;dbname=$db;charset=utf8mb4";
 
@@ -22,6 +22,10 @@ class Database
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                 PDO::ATTR_EMULATE_PREPARES   => false,
             ]);
+            
+            // Asegurar UTF-8
+            self::$pdo->exec("SET NAMES utf8mb4");
+            self::$pdo->exec("SET CHARACTER SET utf8mb4");
         }
         return self::$pdo;
     }
